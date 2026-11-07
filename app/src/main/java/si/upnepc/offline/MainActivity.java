@@ -31,8 +31,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
-import com.journeyapps.barcodescanner.IntentIntegrator;
-import com.journeyapps.barcodescanner.IntentResult;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.io.OutputStream;
 import java.util.EnumMap;
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
     private void button(String label, boolean primary, View.OnClickListener listener) {
         Button button = new Button(this);
         button.setText(label);
-        button.setTextAllCaps(false);
+        button.setAllCaps(false);
         button.setTextSize(16);
         button.setTextColor(primary ? Color.WHITE : BLUE);
         button.setBackground(bg(primary ? BLUE : Color.WHITE, 14));
