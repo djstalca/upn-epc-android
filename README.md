@@ -4,6 +4,7 @@ Aplikacija za Android, ki lokalno prebere slovenski **UPN QR** s kamero ali iz s
 
 ## Funkcije
 - Skeniranje papirnate položnice s kamero (ZXing) ali uvoz fotografije/posnetka zaslona.
+- Lasten zaslon kamere s preverjanjem dovoljenja, obravnavo napak in možnostjo vrnitve; namesto starega IntentIntegrator / CaptureActivity zagona.
 - Preverjanje UPN glave, dolžine polj (kontrolne vsote), IBAN-a, zneska in vrste plačila.
 - Pretvorba po EPC069-12 v3.1, verzija 002, UTF-8.
 - EPC QR slika, prikaz ključnih podatkov, shranjevanje PNG in kopiranje IBAN-a/sklica.

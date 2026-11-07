@@ -5,8 +5,12 @@
     <application
         android:label="UPN → EPC QR"
         android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:usesCleartextTraffic="false"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity
+            android:name=".SafeQrScanActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"

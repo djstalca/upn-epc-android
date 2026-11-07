@@ -31,8 +31,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import java.io.OutputStream;
 import java.util.EnumMap;
@@ -41,6 +39,7 @@ import java.util.Map;
 public class MainActivity extends Activity {
     private static final int OPEN_IMAGE = 701;
     private static final int SAVE_IMAGE = 702;
+    private static final int SCAN_QR = 703;
     private static final int INK = Color.rgb(20, 32, 50);
     private static final int BLUE = Color.rgb(23, 88, 187);
     private static final int LIGHT = Color.rgb(243, 246, 250);
@@ -122,12 +121,12 @@ public class MainActivity extends Activity {
     private void renderHome() {
         setup("UPN → EPC QR", "Poskeniraj slovensko položnico. Ustvari evropsko QR kodo za bančno nakazilo.");
         button("Skeniraj UPN QR s kamero", true, v -> {
-            IntentIntegrator scanner = new IntentIntegrator(this);
-            scanner.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-            scanner.setPrompt("Usmeri kamero v QR kodo na položnici");
-            scanner.setBeepEnabled(false);
-            scanner.setOrientationLocked(true);
-            scanner.initiateScan();
+            try {
+                startActivityForResult(new Intent(this, SafeQrScanActivity.class), SCAN_QR);
+            } catch (RuntimeException ex) {
+                error("Kamere ni bilo mogoče odpreti. Poskusi uvoziti sliko položnice. (" +
+                        ex.getClass().getSimpleName() + ")");
+            }
         });
         button("Uvozi sliko položnice", false, v -> {
             Intent open = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -144,9 +143,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        IntentResult scan = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scan != null) {
-            if (scan.getContents() != null) convertAndShow(scan.getContents());
+        if (requestCode == SCAN_QR) {
+            if (resultCode == RESULT_OK && data != null) {
+                String raw = data.getStringExtra(SafeQrScanActivity.EXTRA_RESULT);
+                if (raw != null && !raw.isEmpty()) convertAndShow(raw);
+            } else if (data != null && data.hasExtra(SafeQrScanActivity.EXTRA_ERROR)) {
+                error(data.getStringExtra(SafeQrScanActivity.EXTRA_ERROR));
+            }
             return;
         }
         if (requestCode == OPEN_IMAGE && resultCode == RESULT_OK && data != null) {
